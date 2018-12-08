@@ -24,4 +24,8 @@ sudo apt install make g++ git libx11-dev libxi-dev libgl1-mesa-dev \
                  libglu1-mesa-dev libxrandr-dev libxext-dev \
                  libxcursor-dev libxinerama-dev libxi-dev \
                  libglew-dev libglfw3-dev libglm-dev libglew2.0
+
+# VSCode
+wget -O vscode.deb https://go.microsoft.com/fwlink/?LinkID=760868
+sudo dpkg -i vscode.deb
 ```
