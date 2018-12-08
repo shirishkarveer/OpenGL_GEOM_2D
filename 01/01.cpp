@@ -8,8 +8,16 @@
 
 using namespace glm;
 
+static void glfwCB(int error, const char *desc)
+{
+    fprintf(stderr, "GLFW error 0x%08X: %s\n", error, desc);
+}
+
 int main()
 {
+    // Set error callback to see more detailed failure info
+    glfwSetErrorCallback(glfwCB);
+
     // Initialise GLFW
     glewExperimental = true; // Needed for core profile
     if (!glfwInit())
@@ -19,12 +27,8 @@ int main()
     }
 
     glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
-
-    // This is based on the output of glxinfo from mesa-utils:
-    // $ glxinfo | grep 'OpenGL version'
-    // OpenGL version string: 3.1 Mesa 18.2.2
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
     // To make MacOS happy; should not be needed
     // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); 
