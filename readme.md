@@ -20,7 +20,7 @@ Development Environment
 You will need to run the following package installations:
 
 ```bash
-sudo apt install make g++ libx11-dev libxi-dev libgl1-mesa-dev \
+sudo apt install make g++ git libx11-dev libxi-dev libgl1-mesa-dev \
                  libglu1-mesa-dev libxrandr-dev libxext-dev \
                  libxcursor-dev libxinerama-dev libxi-dev
 ```
