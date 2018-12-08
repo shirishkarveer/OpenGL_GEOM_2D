@@ -1,5 +1,12 @@
-01: 01.o 
-	g++  -L:libglfw.so.3 -L:libglew.so.1.13 -o 01 01.o 
-01.o: 01.cpp 
-	g++  01.cpp -o 01.o -c 
+cflags=-ggdb -Wall -std=c++17
 
+all: 01
+
+01: 01.o makefile
+	g++ $(cflags) $(shell pkg-config --libs glew glfw3 glm) -o $@ $<
+	# -L:libglfw.so.3
+01.o: 01.cpp makefile
+	g++ $(cflags) $(shell pkg-config --cflags glew glfw3 glm) -o $@ $< -c
+
+# The following have pkg-config entries:
+# x11 xext glu glfw3 glew glm
