@@ -17,6 +17,19 @@ Development Environment
 - OS: Ubuntu or Ubuntu variant
 - IDE: VSCode
 
+Set `/etc/apt/sources.list` to:
+
+```
+deb     https://muug.ca/mirror/ubuntu cosmic           main restricted universe multiverse
+deb-src https://muug.ca/mirror/ubuntu cosmic           main restricted universe multiverse
+deb     https://muug.ca/mirror/ubuntu cosmic-updates   main restricted universe multiverse
+deb-src https://muug.ca/mirror/ubuntu cosmic-updates   main restricted universe multiverse
+deb     https://muug.ca/mirror/ubuntu cosmic-security  main restricted universe multiverse
+deb-src https://muug.ca/mirror/ubuntu cosmic-security  main restricted universe multiverse
+deb     https://muug.ca/mirror/ubuntu cosmic-backports main restricted universe multiverse
+deb-src https://muug.ca/mirror/ubuntu cosmic-backports main restricted universe multiverse
+```
+
 You will need to run the following package installations:
 
 ```bash
