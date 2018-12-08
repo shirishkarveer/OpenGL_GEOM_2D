@@ -27,6 +27,9 @@ int main()
     }
 
     glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
+
+    // To ensure compatiblity, check the output of this command:
+    // $ glxinfo | grep 'Max core profile version'
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
