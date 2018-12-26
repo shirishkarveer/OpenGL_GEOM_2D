@@ -3,6 +3,9 @@ Introduction
 
 This is a learning project. It's not immediately intended to solve any particular problem.
 
+For now we're walking through the examples at http://www.opengl-tutorial.org/ with some slight 
+modifications.
+
 Stack
 =====
 The programming language will be C++.
