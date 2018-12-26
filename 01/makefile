@@ -1,3 +1,5 @@
+#!/usr/bin/make -f
+
 cflags=-ggdb -Wall -std=c++17
 
 all: 01
