@@ -33,10 +33,8 @@ deb-src https://muug.ca/mirror/ubuntu cosmic-backports main restricted universe 
 You will need to run the following package installations:
 
 ```bash
-sudo apt install make g++ git libx11-dev libxi-dev libgl1-mesa-dev \
-                 libglu1-mesa-dev libxrandr-dev libxext-dev \
-                 libxcursor-dev libxinerama-dev libxi-dev \
-                 libglew-dev libglfw3-dev libglm-dev libglew2.0
+sudo apt install make g++ git \
+                 libglew-dev libglfw3-dev libglm-dev
 
 # VSCode
 wget -O vscode.deb https://go.microsoft.com/fwlink/?LinkID=760868
