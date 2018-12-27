@@ -16,8 +16,6 @@ int main()
     // Set error callback to see more detailed failure info
     glfwSetErrorCallback(glfwCB);
 
-    // Initialise GLFW
-    glewExperimental = true; // Needed for core profile
     if (!glfwInit())
     {
         fprintf(stderr, "Failed to initialize GLFW\n");
@@ -31,14 +29,10 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-    // To make MacOS happy; should not be needed
-    // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); 
-
     // We don't want the old OpenGL 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Open a window and create its OpenGL context
-    // (In the accompanying source code, this variable is global for simplicity)
     GLFWwindow *window = glfwCreateWindow(1024, 768, "Tutorial 01", NULL, NULL);
     if (window == NULL)
     {
@@ -54,6 +48,7 @@ int main()
     if (glewInit() != GLEW_OK) 
     {
         fprintf(stderr, "Failed to initialize GLEW\n");
+		glfwTerminate();
         return -1;
     }
 
