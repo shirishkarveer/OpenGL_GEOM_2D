@@ -189,17 +189,17 @@ int main() {
     // Our ModelViewProjection : multiplication of our 3 matrices
     glm::mat4 MVP = projection * view * model; // Remember, matrix multiplication is the other way around
 
-    static const GLfloat g_vertex_buffer_data[] = {
-        -1.0f, -1.0f, 0.0f,
-         1.0f, -1.0f, 0.0f,
-         0.0f,  1.0f, 0.0f,
+    static const GLfloat vertexBufferData[] = {
+        -1.0, -1.0, 0.0,
+         1.0, -1.0, 0.0,
+         0.0,  1.0, 0.0,
     };
 
     GLuint vertexBuffer;
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data),
-                 g_vertex_buffer_data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData),
+                 vertexBufferData, GL_STATIC_DRAW);
 
     puts("Initialized.");
 

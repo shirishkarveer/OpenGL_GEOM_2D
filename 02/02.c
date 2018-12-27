@@ -34,7 +34,7 @@ static GLuint loadShader(const char *fn, GLenum shaderType) {
         exit(1);
     }
     rewind(f);
-    char *source = malloc(size);
+    char *source = (char*)malloc(size);
     if (!source) {
         perror("Failed to allocate source memory");
         exit(1);
@@ -55,7 +55,7 @@ static GLuint loadShader(const char *fn, GLenum shaderType) {
     GLint logLength;
     glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &logLength);
     if (logLength) {
-        GLchar *log = malloc(logLength);
+        GLchar *log = (GLchar*)malloc(logLength);
         if (!log) {
             perror("Couldn't allocate shader compile log");
             exit(1);
@@ -89,7 +89,7 @@ static GLuint loadShaders(const char *vertex_fn, const char *fragment_fn) {
     GLint logLength;
     glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &logLength);
     if (logLength > 0) {
-        char *log = malloc(logLength);
+        char *log = (char*)malloc(logLength);
         if (!log) {
             perror("Couldn't allocate shader compile log");
             exit(1);
@@ -156,26 +156,26 @@ int main() {
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
     // Dark blue background
-    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+    glClearColor(0.0, 0.0, 0.4, 0.0);
 
-    GLuint VertexArrayID;
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
+    GLuint vertexArrayID;
+    glGenVertexArrays(1, &vertexArrayID);
+    glBindVertexArray(vertexArrayID);
 
     // Create and compile our GLSL program from the shaders
     GLuint programID = loadShaders("simple-vertex.glsl", "simple-fragment.glsl");
 
-    static const GLfloat g_vertex_buffer_data[] = {
-        -1.0f, -1.0f, 0.0f,
-         1.0f, -1.0f, 0.0f,
-         0.0f,  1.0f, 0.0f,
+    static const GLfloat vertexBufferData[] = {
+        -1.0, -1.0, 0.0,
+         1.0, -1.0, 0.0,
+         0.0,  1.0, 0.0,
     };
 
-    GLuint vertexbuffer;
-    glGenBuffers(1, &vertexbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data),
-                 g_vertex_buffer_data, GL_STATIC_DRAW);
+    GLuint vertexBuffer;
+    glGenBuffers(1, &vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData),
+                 vertexBufferData, GL_STATIC_DRAW);
 
     puts("Initialized.");
 
@@ -188,7 +188,7 @@ int main() {
 
         // 1st attribute buffer: vertices
         glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glVertexAttribPointer(
             0,         // attribute 0. No particular reason for 0, but must match the layout in the shader.
             3,         // size
@@ -212,8 +212,8 @@ int main() {
              !glfwWindowShouldClose(window));
 
     // Cleanup VBO
-    glDeleteBuffers(1, &vertexbuffer);
-    glDeleteVertexArrays(1, &VertexArrayID);
+    glDeleteBuffers(1, &vertexBuffer);
+    glDeleteVertexArrays(1, &vertexArrayID);
     glDeleteProgram(programID);
 
     // Close OpenGL window and terminate GLFW
