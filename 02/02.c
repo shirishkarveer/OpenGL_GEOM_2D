@@ -171,9 +171,9 @@ int main() {
          0.0,  1.0, 0.0,
     };
 
-    GLuint vertexBuffer;
-    glGenBuffers(1, &vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    GLuint vertexBufferID;
+    glGenBuffers(1, &vertexBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData),
                  vertexBufferData, GL_STATIC_DRAW);
 
@@ -188,7 +188,7 @@ int main() {
 
         // 1st attribute buffer: vertices
         glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
         glVertexAttribPointer(
             0,         // attribute 0. No particular reason for 0, but must match the layout in the shader.
             3,         // size
@@ -212,7 +212,7 @@ int main() {
              !glfwWindowShouldClose(window));
 
     // Cleanup VBO
-    glDeleteBuffers(1, &vertexBuffer);
+    glDeleteBuffers(1, &vertexBufferID);
     glDeleteVertexArrays(1, &vertexArrayID);
     glDeleteProgram(programID);
 
