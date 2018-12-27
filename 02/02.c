@@ -6,13 +6,11 @@
 #include <GLFW/glfw3.h>
 
 
-static void glfwCB(int error, const char *desc)
-{
+static void glfwErrorCallback(int error, const char *desc) {
     fprintf(stderr, "GLFW error 0x%08X: %s\n", error, desc);
 }
 
-static GLuint loadShader(const char *fn, GLenum shaderType)
-{
+static GLuint loadShader(const char *fn, GLenum shaderType) {
     printf("Compiling shader '%s'...\n", fn);
 
     GLuint shaderID = glCreateShader(shaderType);
@@ -30,18 +28,18 @@ static GLuint loadShader(const char *fn, GLenum shaderType)
         perror("Failed to get file size");
         exit(1);
     }
-    GLint size[1] = {ftell(f)};
-    if (size[0] == -1) {
+    GLint size = ftell(f);
+    if (size == -1) {
         perror("Failed to get file size");
         exit(1);
     }
     rewind(f);
-    char *source = malloc(size[0]);
+    char *source = malloc(size);
     if (!source) {
         perror("Failed to allocate source memory");
         exit(1);
     }
-    if (fread(source, 1, size[0], f) != size[0]) {
+    if (fread(source, 1, size, f) != size) {
         perror("Failed to read file");
         exit(1);
     }
@@ -49,7 +47,7 @@ static GLuint loadShader(const char *fn, GLenum shaderType)
         perror("Warning: failed to close source file");
 
     const GLchar *rosource = source;
-    glShaderSource(shaderID, 1, &rosource, size);
+    glShaderSource(shaderID, 1, &rosource, &size);
     free(source);
 
     glCompileShader(shaderID);
@@ -75,8 +73,7 @@ static GLuint loadShader(const char *fn, GLenum shaderType)
     return shaderID;
 }
 
-static GLuint loadShaders(const char *vertex_fn, const char *fragment_fn)
-{
+static GLuint loadShaders(const char *vertex_fn, const char *fragment_fn) {
     // Compile the shaders
     GLuint vertexShaderID = loadShader(vertex_fn, GL_VERTEX_SHADER),
            fragmentShaderID = loadShader(fragment_fn, GL_FRAGMENT_SHADER);
@@ -115,13 +112,11 @@ static GLuint loadShaders(const char *vertex_fn, const char *fragment_fn)
     return programID;
 }
 
-int main()
-{
+int main() {
     // Set error callback to see more detailed failure info
-    glfwSetErrorCallback(glfwCB);
+    glfwSetErrorCallback(glfwErrorCallback);
 
-    if (!glfwInit())
-    {
+    if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\n");
         return -1;
     }
@@ -141,8 +136,7 @@ int main()
 
     // Open a window and create its OpenGL context
     GLFWwindow *window = glfwCreateWindow(1024, 768, "Tutorial 02 - Red triangle", NULL, NULL);
-    if (!window)
-    {
+    if (!window) {
         fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, "
                         "they are not 3.3 compatible. Try the 2.1 version of "
                         "the tutorials.\n");
@@ -185,8 +179,7 @@ int main()
 
     puts("Initialized.");
 
-    do
-    {
+    do {
         // Clear the screen
         glClear(GL_COLOR_BUFFER_BIT);
 

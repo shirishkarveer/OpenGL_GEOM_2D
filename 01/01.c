@@ -6,18 +6,15 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-static void glfwCB(int error, const char *desc)
-{
+static void glfwErrorCallback(int error, const char *desc) {
     fprintf(stderr, "GLFW error 0x%08X: %s\n", error, desc);
 }
 
-int main()
-{
+int main() {
     // Set error callback to see more detailed failure info
-    glfwSetErrorCallback(glfwCB);
+    glfwSetErrorCallback(glfwErrorCallback);
 
-    if (!glfwInit())
-    {
+    if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\n");
         return -1;
     }
@@ -37,8 +34,7 @@ int main()
 
     // Open a window and create its OpenGL context
     GLFWwindow *window = glfwCreateWindow(1024, 768, "Tutorial 01", NULL, NULL);
-    if (window == NULL)
-    {
+    if (!window) {
         fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, "
                         "they are not 3.3 compatible. Try the 2.1 version of "
                         "the tutorials.\n");
@@ -48,8 +44,7 @@ int main()
     
     glfwMakeContextCurrent(window); // Initialize GLEW
     glewExperimental = true; // Needed in core profile
-    if (glewInit() != GLEW_OK) 
-    {
+    if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
         glfwTerminate();
         return -1;
@@ -58,8 +53,7 @@ int main()
     // Ensure we can capture the escape key being pressed below
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-    do
-    {
+    do {
         // Clear the screen. It's not mentioned before Tutorial 02, but it can 
         // cause flickering, so it's there nonetheless.
         glClear(GL_COLOR_BUFFER_BIT);
