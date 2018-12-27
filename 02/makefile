@@ -2,13 +2,15 @@
 
 cflags=-ggdb -Wall -std=c17
 ldflags=$(cflags)
+ccinc=$(shell pkg-config --cflags glew glfw3)
+ldinc=$(shell pkg-config --libs glew glfw3)
 ifeq ($(shell uname),Darwin)
-	ldflags += -framework OpenGL
+	ldinc+=-framework OpenGL
 endif
 
 all: 02
 
 02: 02.o makefile
-	gcc -o $@ $< $(shell pkg-config --libs glew glfw3) $(ldflags)
+	gcc $(ldflags) -o $@ $< $(ldinc)
 02.o: 02.c makefile
-	gcc -o $@ $< $(shell pkg-config --cflags glew glfw3) $(cflags) -c
+	gcc $(cflags) -o $@ $< $(ccinc) -c
