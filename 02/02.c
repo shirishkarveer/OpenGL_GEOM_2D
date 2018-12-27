@@ -165,7 +165,7 @@ int main() {
     // Create and compile our GLSL program from the shaders
     GLuint programID = loadShaders("simple-vertex.glsl", "simple-fragment.glsl");
 
-    const GLfloat g_vertex_buffer_data[] = {
+    static const GLfloat g_vertex_buffer_data[] = {
         -1.0f, -1.0f, 0.0f,
          1.0f, -1.0f, 0.0f,
          0.0f,  1.0f, 0.0f,
