@@ -161,33 +161,33 @@ int main() {
     // Dark blue background
     glClearColor(0.0, 0.0, 0.4, 0.0);
 
-    GLuint VertexArrayID;
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
+    GLuint vertexArrayID;
+    glGenVertexArrays(1, &vertexArrayID);
+    glBindVertexArray(vertexArrayID);
 
     // Create and compile our GLSL program from the shaders
     GLuint programID = loadShaders(
         "simple-transform.glsl", "single-colour.glsl");
 
     // Get a handle for our "MVP" uniform
-    GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+    GLuint matrixID = glGetUniformLocation(programID, "MVP");
 
     // Projection matrix: 45 Field of View, 4:3 ratio, display range: 0.1 unit <-> 100 units
-    glm::mat4 Projection = glm::perspective(
+    glm::mat4 projection = glm::perspective(
         glm::radians(45.f), 4.f/3, 0.1f, 100.f);
     // Or, for an ortho camera (in world coordinates):
-    // glm::mat4 Projection = glm::ortho(-10,10,-10,10,0,100);
+    // glm::mat4 projection = glm::ortho(-10,10,-10,10,0,100);
 
     // Camera matrix
-    glm::mat4 View = glm::lookAt(
+    glm::mat4 view = glm::lookAt(
         glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
         glm::vec3(0,0,0), // and looks at the origin
         glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
     );
     // Model matrix: an identity matrix (model will be at the origin)
-    glm::mat4 Model = glm::mat4(1.0f);
+    glm::mat4 model = glm::mat4(1.0f);
     // Our ModelViewProjection : multiplication of our 3 matrices
-    glm::mat4 MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
+    glm::mat4 MVP = projection * view * model; // Remember, matrix multiplication is the other way around
 
     static const GLfloat g_vertex_buffer_data[] = {
         -1.0f, -1.0f, 0.0f,
@@ -195,9 +195,9 @@ int main() {
          0.0f,  1.0f, 0.0f,
     };
 
-    GLuint vertexbuffer;
-    glGenBuffers(1, &vertexbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    GLuint vertexBuffer;
+    glGenBuffers(1, &vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data),
                  g_vertex_buffer_data, GL_STATIC_DRAW);
 
@@ -212,11 +212,11 @@ int main() {
 
         // Send our transformation to the currently bound shader,
         // in the "MVP" uniform
-        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+        glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 
         // 1st attribute buffer: vertices
         glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glVertexAttribPointer(
             0,         // attribute 0. No particular reason for 0, but must match the layout in the shader.
             3,         // size
@@ -240,8 +240,8 @@ int main() {
              !glfwWindowShouldClose(window));
 
     // Cleanup VBO and shader
-    glDeleteBuffers(1, &vertexbuffer);
-    glDeleteVertexArrays(1, &VertexArrayID);
+    glDeleteBuffers(1, &vertexBuffer);
+    glDeleteVertexArrays(1, &vertexArrayID);
     glDeleteProgram(programID);
 
     // Close OpenGL window and terminate GLFW
