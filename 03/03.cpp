@@ -114,13 +114,18 @@ static GLuint loadShaders(const char *vertex_fn, const char *fragment_fn) {
     return programID;
 }
 
-int main() {
+static void init(GLFWwindow **window,
+                 GLuint *programID,
+                 GLuint *matrixID,
+                 GLuint *vertexBufferID,
+                 GLuint *vertexArrayID,
+                 glm::mat4 *mvp) {
     // Set error callback to see more detailed failure info
     glfwSetErrorCallback(glfwErrorCallback);
 
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\n");
-        return -1;
+        exit(1);
     }
 
     glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
@@ -131,46 +136,45 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
     // To make MacOS happy
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); 
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    // We don't want the old OpenGL 
+    // We don't want the old OpenGL
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Open a window and create its OpenGL context
-    GLFWwindow *window = glfwCreateWindow(1024, 768,
+    *window = glfwCreateWindow(1024, 768,
         "Tutorial 03 - Matrices", NULL, NULL);
-    if (!window) {
+    if (!*window) {
         fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, "
                         "they are not 3.3 compatible. Try the 2.1 version of "
                         "the tutorials.\n");
         glfwTerminate();
-        return -1;
+        exit(1);
     }
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(*window);
 
     glewExperimental = true; // Needed in core profile
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
         glfwTerminate();
-        return -1;
+        exit(1);
     }
 
     // Ensure we can capture the escape key being pressed below
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+    glfwSetInputMode(*window, GLFW_STICKY_KEYS, GL_TRUE);
 
     // Dark blue background
     glClearColor(0.0, 0.0, 0.4, 0.0);
 
-    GLuint vertexArrayID;
-    glGenVertexArrays(1, &vertexArrayID);
-    glBindVertexArray(vertexArrayID);
+    glGenVertexArrays(1, vertexArrayID);
+    glBindVertexArray(*vertexArrayID);
 
     // Create and compile our GLSL program from the shaders
-    GLuint programID = loadShaders(
+    *programID = loadShaders(
         "simple-transform.glsl", "single-colour.glsl");
 
     // Get a handle for our "MVP" uniform
-    GLuint matrixID = glGetUniformLocation(programID, "MVP");
+    *matrixID = glGetUniformLocation(*programID, "MVP");
 
     // Projection matrix: 45 Field of View, 4:3 ratio, display range: 0.1 unit <-> 100 units
     glm::mat4 projection = glm::perspective(
@@ -187,7 +191,7 @@ int main() {
     // Model matrix: an identity matrix (model will be at the origin)
     glm::mat4 model = glm::mat4(1.0f);
     // Our ModelViewProjection : multiplication of our 3 matrices
-    glm::mat4 MVP = projection * view * model; // Remember, matrix multiplication is the other way around
+    *mvp = projection * view * model; // Remember, matrix multiplication is the other way around
 
     static const GLfloat vertexBufferData[] = {
         -1.0, -1.0, 0.0,
@@ -195,13 +199,19 @@ int main() {
          0.0,  1.0, 0.0,
     };
 
-    GLuint vertexBufferID;
-    glGenBuffers(1, &vertexBufferID);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+    glGenBuffers(1, vertexBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, *vertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData),
                  vertexBufferData, GL_STATIC_DRAW);
 
     puts("Initialized.");
+}
+
+int main() {
+    GLFWwindow *window;
+    GLuint programID, matrixID, vertexBufferID, vertexArrayID;
+    glm::mat4 mvp;
+    init(&window, &programID, &matrixID, &vertexBufferID, &vertexArrayID, &mvp);
 
     do {
         // Clear the screen
@@ -212,7 +222,7 @@ int main() {
 
         // Send our transformation to the currently bound shader,
         // in the "MVP" uniform
-        glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
+        glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
 
         // 1st attribute buffer: vertices
         glEnableVertexAttribArray(0);
