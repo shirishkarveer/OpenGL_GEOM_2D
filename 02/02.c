@@ -112,13 +112,16 @@ static GLuint loadShaders(const char *vertex_fn, const char *fragment_fn) {
     return programID;
 }
 
-int main() {
+static void init(GLFWwindow **window,
+                 GLuint *programID,
+                 GLuint *vertexBufferID,
+                 GLuint *vertexArrayID) {
     // Set error callback to see more detailed failure info
     glfwSetErrorCallback(glfwErrorCallback);
 
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\n");
-        return -1;
+        exit(1);
     }
 
     glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
@@ -129,41 +132,41 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
     // To make MacOS happy
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); 
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    // We don't want the old OpenGL 
+    // We don't want the old OpenGL
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Open a window and create its OpenGL context
-    GLFWwindow *window = glfwCreateWindow(1024, 768, "Tutorial 02 - Red triangle", NULL, NULL);
-    if (!window) {
+    *window = glfwCreateWindow(1024, 768,
+        "Tutorial 02 - Red triangle", NULL, NULL);
+    if (!*window) {
         fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, "
                         "they are not 3.3 compatible. Try the 2.1 version of "
                         "the tutorials.\n");
         glfwTerminate();
-        return -1;
+        exit(1);
     }
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(*window);
 
     glewExperimental = true; // Needed in core profile
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
         glfwTerminate();
-        return -1;
+        exit(1);
     }
 
     // Ensure we can capture the escape key being pressed below
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+    glfwSetInputMode(*window, GLFW_STICKY_KEYS, GL_TRUE);
 
     // Dark blue background
     glClearColor(0.0, 0.0, 0.4, 0.0);
 
-    GLuint vertexArrayID;
-    glGenVertexArrays(1, &vertexArrayID);
-    glBindVertexArray(vertexArrayID);
+    glGenVertexArrays(1, vertexArrayID);
+    glBindVertexArray(*vertexArrayID);
 
     // Create and compile our GLSL program from the shaders
-    GLuint programID = loadShaders("simple-vertex.glsl", "simple-fragment.glsl");
+    *programID = loadShaders("simple-vertex.glsl", "simple-fragment.glsl");
 
     static const GLfloat vertexBufferData[] = {
         -1.0, -1.0, 0.0,
@@ -171,13 +174,18 @@ int main() {
          0.0,  1.0, 0.0,
     };
 
-    GLuint vertexBufferID;
-    glGenBuffers(1, &vertexBufferID);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+    glGenBuffers(1, vertexBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, *vertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData),
                  vertexBufferData, GL_STATIC_DRAW);
 
     puts("Initialized.");
+}
+
+int main() {
+    GLFWwindow *window;
+    GLuint programID, vertexBufferID, vertexArrayID;
+    init(&window, &programID, &vertexBufferID, &vertexArrayID);
 
     do {
         // Clear the screen
