@@ -1,9 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-// Include GLEW. Always include it before gl.h and glfw3.h, since it's a bit magic.
-#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 static void glfwErrorCallback(int error, const char *desc) {
@@ -43,13 +40,6 @@ static void init(GLFWwindow **window) {
         exit(1);
     }
     glfwMakeContextCurrent(*window);
-    
-    glewExperimental = true; // Needed in core profile
-    if (glewInit() != GLEW_OK) {
-        fprintf(stderr, "Failed to initialize GLEW\n");
-        glfwTerminate();
-        exit(1);
-    }
 
     // Ensure we can capture the escape key being pressed below
     glfwSetInputMode(*window, GLFW_STICKY_KEYS, GL_TRUE);
