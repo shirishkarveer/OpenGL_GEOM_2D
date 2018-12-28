@@ -33,9 +33,7 @@ static void init(GLFWwindow **window) {
     *window = glfwCreateWindow(1024, 768,
         "Tutorial 01", NULL, NULL);
     if (!*window) {
-        fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, "
-                        "they are not 3.3 compatible. Try the 2.1 version of "
-                        "the tutorials.\n");
+        fputs("Failed to open GLFW window.\n", stderr);
         glfwTerminate();
         exit(1);
     }
